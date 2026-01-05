@@ -129,7 +129,7 @@ const performSearch = async () => {
                 v-model="query"
                 type="text"
                 class="w-full focus:outline-none text-lg text-gray-900 dark:text-gray-100 bg-transparent"
-                placeholder="Search Messi Browser"
+                placeholder="Search Adalah Pokoknya Browser"
             />
             <button type="submit" class="ml-2">
               <svg
