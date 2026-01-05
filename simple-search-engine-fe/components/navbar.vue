@@ -26,7 +26,7 @@ const toggleDarkMode = () => {
 <template>
   <nav class="h-20 flex px-10 justify-between items-center bg-white dark:bg-gray-900">
     <!-- Logo -->
-    <nuxt-link to="/" class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Messi Browser</nuxt-link>
+    <nuxt-link to="/" class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Adalah Pokoknya</nuxt-link>
 
     <!-- Dark Mode Toggle Button -->
     <div>

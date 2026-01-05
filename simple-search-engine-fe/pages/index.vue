@@ -24,7 +24,7 @@ onBeforeMount(() => {
     <div class="flex flex-col items-center justify-center min-h-screen h-full bg-white dark:bg-gray-900">
       <!-- Google logo -->
       <div class="mb-8">
-        <h1 class="text-5xl font-bold text-gray-800 dark:text-gray-200">Abang Messi</h1>
+        <h1 class="text-5xl font-bold text-gray-800 dark:text-gray-200">Adalah Pokoknya Browser</h1>
       </div>
 
       <!-- Search Bar -->
@@ -35,7 +35,7 @@ onBeforeMount(() => {
                 v-model="query"
                 type="text"
                 class="w-full focus:outline-none text-lg text-gray-900 dark:text-gray-100 bg-transparent"
-                placeholder="Search Messi Browser"
+                placeholder="Search Adalah Pokoknya Browser"
             />
             <button type="submit" class="ml-2">
               <svg
@@ -55,6 +55,17 @@ onBeforeMount(() => {
             </button>
           </div>
         </form>
+      </div>
+
+      <!-- Upload Button -->
+      <div class="mt-6">
+        <nuxt-link 
+          to="/upload" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+        >
+          <span>📄</span>
+          <span>Upload Dokumen TXT</span>
+        </nuxt-link>
       </div>
 
       <!-- Toggle Dark Mode Button with Icon -->
