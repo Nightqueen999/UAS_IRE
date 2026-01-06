@@ -14,7 +14,7 @@
  */
 
 import natural from "natural";
-import { removeStopwords, eng } from "stopword";
+import { removeStopwords, eng, ind } from "stopword";
 import { Stemmer as StemmerSastrawi } from "sastrawijs";
 
 // Menggunakan PorterStemmer untuk stemming Bahasa Inggris
@@ -22,33 +22,6 @@ const stemmerEN = natural.PorterStemmer;
 
 // Menggunakan Sastrawi untuk stemming Bahasa Indonesia (Algoritma Nazief-Adriani)
 const stemmerID = new StemmerSastrawi();
-
-// =====================================================
-// DAFTAR STOPWORDS BAHASA INDONESIA
-// =====================================================
-const STOPWORDS_ID = [
-    // Kata hubung
-    "yang", "dan", "di", "ke", "dari", "ini", "itu", "dengan", "untuk", "pada",
-    "adalah", "sebagai", "dalam", "tidak", "akan", "juga", "atau", "ada", "mereka",
-    "sudah", "saya", "kita", "kami", "anda", "ia", "dia", "telah", "oleh", "jika",
-    "bila", "saat", "seperti", "setelah", "sebelum", "karena", "agar", "supaya",
-    "maka", "namun", "tetapi", "walau", "meski", "bahwa", "apa", "siapa", "mana",
-    "kapan", "dimana", "kemana", "bagaimana", "mengapa", "kenapa",
-    // Kata bantu
-    "bisa", "dapat", "harus", "perlu", "ingin", "mau", "akan", "sedang", "masih",
-    "sudah", "belum", "pernah", "sering", "selalu", "jarang", "hampir", "sangat",
-    "lebih", "paling", "kurang", "cukup", "terlalu", "sekali", "hanya", "saja",
-    "lagi", "lalu", "kemudian", "sekarang", "nanti", "dulu", "baru", "masih",
-    // Kata ganti
-    "saya", "aku", "kamu", "engkau", "kita", "kami", "mereka", "dia", "ia", "beliau",
-    "nya", "mu", "ku", "kami",
-    // Preposisi
-    "di", "ke", "dari", "pada", "untuk", "dengan", "tanpa", "oleh", "antara",
-    "melalui", "tentang", "terhadap", "mengenai", "sampai", "hingga", "sejak",
-    // Artikel dan lainnya
-    "si", "sang", "para", "setiap", "semua", "seluruh", "beberapa", "banyak",
-    "sedikit", "berbagai", "tersebut", "hal", "cara", "serta"
-];
 
 /**
  * Stemmer Bahasa Indonesia menggunakan Sastrawi (Algoritma Nazief-Adriani)
@@ -112,8 +85,8 @@ export const stopwordRemoval = (tokens) => {
     // Deteksi bahasa
     const language = detectLanguage(tokens);
 
-    // Gabungkan stopwords Inggris dan Indonesia
-    const combinedStopwords = [...eng, ...STOPWORDS_ID];
+    // Gabungkan stopwords Inggris dan Indonesia dari library
+    const combinedStopwords = [...eng, ...ind];
 
     // Hapus stopwords
     const filteredTokens = removeStopwords(tokens, combinedStopwords);
