@@ -13,7 +13,7 @@ onMounted(() => {
 
 const toggleDarkMode = () => {
   darkMode.value = !darkMode.value
-  localStorage.setItem('darkMode', darkMode.value)
+  localStorage.setItem('darkMode', String(darkMode.value))
 
   // Update class di HTML tag
   if (darkMode.value) {
@@ -21,6 +21,9 @@ const toggleDarkMode = () => {
   } else {
     document.documentElement.classList.remove('dark')
   }
+  
+  // Dispatch custom event agar layout dapat mendeteksi perubahan
+  window.dispatchEvent(new CustomEvent('darkModeChanged'))
 }
 </script>
 <template>
