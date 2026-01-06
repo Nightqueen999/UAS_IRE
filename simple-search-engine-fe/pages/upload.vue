@@ -27,6 +27,7 @@ const searchResults = ref<any[]>([])
 const isUploading = ref(false)
 const message = ref('')
 const messageType = ref<'success' | 'error' | 'info'>('info')
+const selectedDocument = ref<any>(null) // Untuk menampilkan detail dokumen yang diklik
 
 // Fetch existing uploaded documents on mount
 onMounted(async () => {
@@ -195,6 +196,16 @@ const showMessage = (msg: string, type: 'success' | 'error' | 'info') => {
   messageType.value = type
   setTimeout(() => { message.value = '' }, 3000)
 }
+
+// Tampilkan detail dokumen
+const showDocument = (doc: any) => {
+  selectedDocument.value = doc
+}
+
+// Tutup modal dokumen
+const closeDocument = () => {
+  selectedDocument.value = null
+}
 </script>
 
 <template>
@@ -292,8 +303,13 @@ Python is a programming language that is widely used for web development, data s
         <!-- Search Results -->
         <div v-if="searchResults.length > 0" class="mb-4">
           <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-2">Hasil Pencarian:</h4>
-          <div v-for="result in searchResults" :key="result.id" class="border-b border-gray-200 dark:border-gray-700 pb-3 mb-3">
-            <p class="font-semibold text-blue-600 dark:text-blue-400">{{ result.title }}</p>
+          <div 
+            v-for="result in searchResults" 
+            :key="result.id" 
+            @click="showDocument(result)"
+            class="border-b border-gray-200 dark:border-gray-700 pb-3 mb-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded transition-colors"
+          >
+            <p class="font-semibold text-blue-600 dark:text-blue-400 hover:underline">{{ result.title }}</p>
             <p class="text-sm text-gray-600 dark:text-gray-400">{{ result.author }} | Score: {{ result.score?.toFixed(4) }}</p>
             <p class="text-sm text-gray-500">{{ result.content?.substring(0, 100) }}...</p>
           </div>
@@ -304,10 +320,53 @@ Python is a programming language that is widely used for web development, data s
           Belum ada dokumen yang diupload
         </div>
         <div v-else class="space-y-3 max-h-60 overflow-y-auto">
-          <div v-for="doc in uploadedDocuments" :key="doc.id" class="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+          <div 
+            v-for="doc in uploadedDocuments" 
+            :key="doc.id" 
+            @click="showDocument(doc)"
+            class="border border-gray-200 dark:border-gray-700 rounded-lg p-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
             <p class="font-semibold text-gray-800 dark:text-gray-100">{{ doc.title }}</p>
             <p class="text-sm text-gray-600 dark:text-gray-400">{{ doc.author }} | {{ doc.date }}</p>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Detail Dokumen -->
+    <div 
+      v-if="selectedDocument" 
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      @click.self="closeDocument"
+    >
+      <div class="bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full max-h-[80vh] overflow-hidden shadow-xl">
+        <!-- Header Modal -->
+        <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">{{ selectedDocument.title }}</h2>
+          <button @click="closeDocument" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl">
+            &times;
+          </button>
+        </div>
+        <!-- Info Dokumen -->
+        <div class="px-4 py-2 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            <span class="font-semibold">Penulis:</span> {{ selectedDocument.author }} | 
+            <span class="font-semibold">Tanggal:</span> {{ selectedDocument.date }}
+            <span v-if="selectedDocument.score" class="ml-2">| <span class="font-semibold">Score:</span> {{ selectedDocument.score?.toFixed(4) }}</span>
+          </p>
+        </div>
+        <!-- Content Dokumen -->
+        <div class="p-4 overflow-y-auto max-h-[60vh]">
+          <p class="text-gray-800 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">{{ selectedDocument.content }}</p>
+        </div>
+        <!-- Footer Modal -->
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+          <button 
+            @click="closeDocument" 
+            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"
+          >
+            Tutup
+          </button>
         </div>
       </div>
     </div>
