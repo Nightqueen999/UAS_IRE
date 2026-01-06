@@ -184,20 +184,24 @@ export const getBlogs = async (req, res) => {
         const cosineDetails = calculateCosineSimilarity(queryTokens, blogTokenArrays, documentTitles);
 
         // =====================================================
-        // TAHAP 6: RANKING DOKUMEN
+        // TAHAP 6: RANKING DOKUMEN MENGGUNAKAN COSINE SIMILARITY
         // =====================================================
-        let searchResults = tf_idf.rankDocumentsByQuery(stemmedQuery);
+        // Gunakan hasil cosine similarity untuk ranking (sama dengan yang di console)
+        const cosineRanking = cosineDetails.ranking;
 
-        // Format hasil pencarian
-        const result = searchResults.filter((result) => result.index < allDocuments.length)
-            .map((result) => {
-                const blog = allDocuments[result.index];
+        // Format hasil pencarian berdasarkan cosine ranking
+        const result = cosineRanking
+            .filter((ranked) => parseFloat(ranked.score) > 0)
+            .map((ranked) => {
+                const blog = allDocuments.find(doc => doc.title === ranked.title);
+                if (!blog) return null;
                 return {
                     ...blog,
-                    score: result.similarityIndex,
-                    token: result.document
+                    score: parseFloat(ranked.score),
+                    rank: ranked.rank
                 };
-            });
+            })
+            .filter(item => item !== null);
 
         // =====================================================
         // RESPONSE DENGAN DETAIL PREPROCESSING
