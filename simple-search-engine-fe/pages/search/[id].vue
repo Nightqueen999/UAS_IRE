@@ -63,8 +63,8 @@ onMounted(async () => {
     </div>
 
     <!-- Blog Content -->
-    <div class="prose dark:prose-dark">
-      <p class="whitespace-pre-wrap">{{ blog.content }}</p>
+    <div class="prose max-w-none">
+      <p class="whitespace-pre-wrap text-gray-800 dark:text-gray-200 leading-relaxed text-base">{{ blog.content }}</p>
     </div>
 
     <!-- Back Link -->
@@ -77,11 +77,8 @@ onMounted(async () => {
 
 
 <style scoped>
-/* Dark mode support for prose content */
+/* Prose content styling */
 .prose {
-  color: #333;
-}
-.dark .prose-dark {
-  color: #ccc;
+  line-height: 1.75;
 }
 </style>
