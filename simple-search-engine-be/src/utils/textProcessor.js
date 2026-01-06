@@ -15,9 +15,13 @@
 
 import natural from "natural";
 import { removeStopwords, eng } from "stopword";
+import { Stemmer as StemmerSastrawi } from "sastrawijs";
 
 // Menggunakan PorterStemmer untuk stemming Bahasa Inggris
 const stemmerEN = natural.PorterStemmer;
+
+// Menggunakan Sastrawi untuk stemming Bahasa Indonesia (Algoritma Nazief-Adriani)
+const stemmerID = new StemmerSastrawi();
 
 // =====================================================
 // DAFTAR STOPWORDS BAHASA INDONESIA
@@ -46,62 +50,12 @@ const STOPWORDS_ID = [
     "sedikit", "berbagai", "tersebut", "hal", "cara", "serta"
 ];
 
-// =====================================================
-// ATURAN STEMMING BAHASA INDONESIA (Sederhana)
-// =====================================================
-// Prefix: me-, di-, ber-, ter-, pe-, ke-, se-
-// Suffix: -kan, -an, -i, -nya, -lah, -kah
-const INDONESIAN_PREFIXES = [
-    { pattern: /^meng/, replacement: "" },
-    { pattern: /^mem/, replacement: "" },
-    { pattern: /^men/, replacement: "" },
-    { pattern: /^meny/, replacement: "s" },
-    { pattern: /^me/, replacement: "" },
-    { pattern: /^di/, replacement: "" },
-    { pattern: /^ber/, replacement: "" },
-    { pattern: /^ter/, replacement: "" },
-    { pattern: /^peng/, replacement: "" },
-    { pattern: /^pem/, replacement: "" },
-    { pattern: /^pen/, replacement: "" },
-    { pattern: /^peny/, replacement: "s" },
-    { pattern: /^pe/, replacement: "" },
-    { pattern: /^ke/, replacement: "" },
-    { pattern: /^se/, replacement: "" }
-];
-
-const INDONESIAN_SUFFIXES = [
-    { pattern: /kan$/, replacement: "" },
-    { pattern: /an$/, replacement: "" },
-    { pattern: /i$/, replacement: "" },
-    { pattern: /nya$/, replacement: "" },
-    { pattern: /lah$/, replacement: "" },
-    { pattern: /kah$/, replacement: "" }
-];
-
 /**
- * Stemmer sederhana untuk Bahasa Indonesia
- * Menghapus prefix dan suffix umum
+ * Stemmer Bahasa Indonesia menggunakan Sastrawi (Algoritma Nazief-Adriani)
+ * Lebih akurat dibanding rule-based sederhana
  */
 const stemIndonesian = (word) => {
-    let stemmed = word.toLowerCase();
-
-    // Hapus suffix terlebih dahulu
-    for (const rule of INDONESIAN_SUFFIXES) {
-        if (rule.pattern.test(stemmed) && stemmed.length > 4) {
-            stemmed = stemmed.replace(rule.pattern, rule.replacement);
-            break;
-        }
-    }
-
-    // Hapus prefix
-    for (const rule of INDONESIAN_PREFIXES) {
-        if (rule.pattern.test(stemmed) && stemmed.length > 3) {
-            stemmed = stemmed.replace(rule.pattern, rule.replacement);
-            break;
-        }
-    }
-
-    return stemmed;
+    return stemmerID.stem(word.toLowerCase());
 };
 
 /**
@@ -243,12 +197,12 @@ export const stemmingProcess = (tokens) => {
     });
 
     return {
-        step: "4. STEMMING (Bilingual: EN Porter + ID)",
+        step: "4. STEMMING (Bilingual: EN Porter + ID Sastrawi)",
         before: tokens,
         after: stemmedTokens,
         mapping: mapping,
         changedCount: Object.keys(mapping).length,
-        explanation: "Mengubah kata ke bentuk dasarnya. EN: 'programming' → 'program'. ID: 'membangun' → 'bangun', 'pengembangan' → 'kembang'"
+        explanation: "Mengubah kata ke bentuk dasarnya. EN: Porter Stemmer. ID: Sastrawi (Algoritma Nazief-Adriani). Contoh: 'membangun' → 'bangun', 'pembelajaran' → 'ajar'"
     };
 };
 
