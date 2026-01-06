@@ -52,6 +52,19 @@ onMounted(async () => {
 
   <!-- Blog Content -->
   <div class="max-w-4xl mx-auto px-6 py-12" v-else-if="blog">
+    <!-- Back Button (di atas) -->
+    <div class="mb-6">
+      <nuxt-link 
+        to="/" 
+        class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors shadow-md"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Kembali ke Beranda
+      </nuxt-link>
+    </div>
+
     <!-- Blog Title -->
     <h1 class="text-4xl font-bold mb-4 text-gray-900 dark:text-gray-100">{{ blog.title }}</h1>
 
@@ -59,17 +72,12 @@ onMounted(async () => {
     <div class="text-sm text-gray-500 dark:text-gray-400 mb-6">
       <span>Written by <strong>{{ blog.author }}</strong></span> |
       <span>{{ blog.date }}</span>
-      <span v-if="blog.source === 'uploaded'" class="ml-2 bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs">📤 Uploaded</span>
+      <span v-if="blog.source === 'uploaded'" class="ml-2 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-2 py-0.5 rounded text-xs">📤 Uploaded</span>
     </div>
 
     <!-- Blog Content -->
     <div class="prose max-w-none">
       <p class="whitespace-pre-wrap text-gray-800 dark:text-gray-200 leading-relaxed text-base">{{ blog.content }}</p>
-    </div>
-
-    <!-- Back Link -->
-    <div class="mt-8">
-      <nuxt-link to="/search" class="text-blue-500 hover:underline">← Kembali ke Pencarian</nuxt-link>
     </div>
   </div>
 </template>
