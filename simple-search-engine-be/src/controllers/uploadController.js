@@ -47,7 +47,13 @@ const UPLOADED_DOCS_FILE = path.join(__dirname, '../datas/uploaded_documents.jso
 const loadUploadedDocuments = () => {
     try {
         if (fs.existsSync(UPLOADED_DOCS_FILE)) {
-            const data = fs.readFileSync(UPLOADED_DOCS_FILE, 'utf-8');
+            // Gunakan flag 'r' untuk force fresh read (tidak pakai cache)
+            const fd = fs.openSync(UPLOADED_DOCS_FILE, 'r');
+            const stats = fs.fstatSync(fd);
+            const buffer = Buffer.alloc(stats.size);
+            fs.readSync(fd, buffer, 0, stats.size, 0);
+            fs.closeSync(fd);
+            const data = buffer.toString('utf-8');
             return JSON.parse(data);
         }
     } catch (e) {
@@ -64,7 +70,12 @@ const loadUploadedDocuments = () => {
 const saveUploadedDocuments = (documents, nextId) => {
     try {
         const data = JSON.stringify({ documents, nextId }, null, 2);
-        fs.writeFileSync(UPLOADED_DOCS_FILE, data, 'utf-8');
+        // Gunakan openSync + writeSync + fsyncSync untuk memastikan data benar-benar ditulis ke disk
+        const fd = fs.openSync(UPLOADED_DOCS_FILE, 'w');
+        fs.writeSync(fd, data, 0, 'utf-8');
+        fs.fsyncSync(fd);  // Force flush ke disk
+        fs.closeSync(fd);
+        console.log(`[SAVE] Saved ${documents.length} documents to file`);
         return true;
     } catch (e) {
         console.error('Error saving uploaded documents:', e);
